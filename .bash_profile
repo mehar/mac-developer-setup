@@ -5,7 +5,18 @@
 ####
 
 alias k=kubectl
-alias sl="saml2aws login --skip-prompt --duo-mfa-option=\"Duo Push\" --force"
+
+function slp {
+	echo $#
+	if [[ $# -lt 1 ]]; then
+		echo "slp <aws_profile> [other saml2aws args]"
+		return
+	fi
+	
+	export AWS_PROFILE=$1 && saml2aws login --skip-prompt --duo-mfa-option="Duo Push" --profile=$@ 
+}
+
+#alias sl="saml2aws login --skip-prompt --duo-mfa-option=\"Duo Push\" --force --profile=$1"
 
 # Usage: get_kube_config maglevcloud3.tesseractinternal.com
 function get_kube_config {
@@ -37,3 +48,7 @@ function __init_KUBECONFIG {
 # kubectl config current-context
 # kubectl config use-context context-name
 unset KUBECONFIG && __init_KUBECONFIG
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/mesimhad/.sdkman"
+[[ -s "/Users/mesimhad/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/mesimhad/.sdkman/bin/sdkman-init.sh"
