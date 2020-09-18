@@ -1,6 +1,8 @@
+#! /bin/bash
+#set -x
 ####
 #
-# NOTE: Tested on Mac's default zsh only 
+# NOTE: Tested on Mac's default zsh only
 #
 ####
 
@@ -13,8 +15,8 @@ function slp {
 		echo "slp <aws_profile> [other saml2aws args]"
 		return
 	fi
-	
-	export AWS_PROFILE=$1 && saml2aws login --skip-prompt --duo-mfa-option="Duo Push" --profile=$@ 
+
+	export AWS_PROFILE=$1 && saml2aws login --skip-prompt --duo-mfa-option="Duo Push" --profile=$@
 }
 
 #alias sl="saml2aws login --skip-prompt --duo-mfa-option=\"Duo Push\" --force --profile=$1"
@@ -39,7 +41,7 @@ function __init_KUBECONFIG {
 		KUBECONFIG=$KUBECONFIG:$f
 	done
 	export KUBECONFIG=$KUBECONFIG
-} 
+}
 
 # Initialize KUBECONFIG env var to all the yaml files
 # https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/
@@ -53,3 +55,12 @@ unset KUBECONFIG && __init_KUBECONFIG
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/mesimhad/.sdkman"
 [[ -s "/Users/mesimhad/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/mesimhad/.sdkman/bin/sdkman-init.sh"
+
+# TODO: Add shell dependency
+source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+PROMPT='$(kube_ps1)'$PROMPT
+
+autoload -Uz compinit
+compinit -i
+source <(kubectl completion zsh)
+complete -F __start_kubectl k
