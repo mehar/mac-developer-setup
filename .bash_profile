@@ -5,6 +5,7 @@
 ####
 
 alias k=kubectl
+alias kx=kubectx
 
 function slp {
 	echo $#
